@@ -1,0 +1,72 @@
+1) Configurar el main.tf
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.16"
+    }
+  }
+
+  required_version = ">= 1.2.0"
+}
+
+provider "aws" {
+  profile = "defaultUala"
+  region  = "us-east-1"
+}
+
+resource "aws_dynamodb_table" "basic-dynamodb-table" {}
+
+2) terraform init
+3) terraform import aws_dynamodb_table.basic-dynamodb-table Contacts
+4) terraform show
+
+resource "aws_dynamodb_table" "basic-dynamodb-table" {
+    arn              = "arn:aws:dynamodb:us-east-1:645342462303:table/Contacts"
+    billing_mode     = "PROVISIONED"
+    hash_key         = "id"
+    id               = "Contacts"
+    name             = "Contacts"
+    read_capacity    = 1
+    stream_arn       = "arn:aws:dynamodb:us-east-1:645342462303:table/Contacts/stream/2023-02-16T18:34:57.788"
+    stream_enabled   = true
+    stream_label     = "2023-02-16T18:34:57.788"
+    stream_view_type = "NEW_AND_OLD_IMAGES"
+    tags             = {}
+    tags_all         = {}
+    write_capacity   = 1
+
+    attribute {
+        name = "id"
+        type = "S"
+    }
+
+    point_in_time_recovery {
+        enabled = false
+    }
+
+    timeouts {}
+
+    ttl {
+        enabled = false
+    }
+}
+
+4) copio el resource en el main.tf el resultado del terraform show
+5) terraform plan 
+Empieza a dar errores como el tls, como es optional lo borre y luego te da errores de atributos que no son unconfigurable como el id arn etc
+Ejecuto este paso n veces hasta que de verde en este caso detecto no hay cambios
+No changes. Your infrastructure matches the configuration.
+
+6) terraform apply
+
+jimenabarseghian@WKSAR1959L terraform-import-contacts-table % terraform apply
+aws_dynamodb_table.basic-dynamodb-table: Refreshing state... [id=Contacts]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration and found no differences, so no changes are needed.
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Como no hubo cambios quedo igual
